@@ -61,11 +61,9 @@ export default async (context, inject) => {
         return;
       }
 
-      setTimeout(_ => {
-        // send new page url with the referer to each counter
-        layer.pushAll( 'set', 'page', to.fullPath );
-        layer.pushAll( 'send', 'pageview' );
-      }, 0);
+      // send new page url with the referer to each counter
+      layer.init( layer.counters, { 'page_path': to.fullPath } );
+      layer.pushAll( 'event', 'page_view' );
     });
   }
 

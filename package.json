@@ -1,6 +1,6 @@
 {
   "name": "@rabota/google-analytics",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "description": "The most powerful module to work with Google Analytics in your Nuxt.js application",
   "keywords": [
     "vue", "vuejs", "nuxt",
@@ -23,6 +23,6 @@
   },
   "main": "index.js",
   "dependencies": {
-    "@rabota/analytics-layer": "^0.2.2"
+    "@rabota/analytics-layer": "^0.3.0"
   }
 }
