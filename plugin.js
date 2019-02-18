@@ -1,7 +1,7 @@
 import { GoogleLayer } from "@rabota/analytics-layer";
 
 export default async (context, inject) => {
-  const registered = !!window[ 'ym' ];
+  const registered = !!window[ 'gtag' ];
 
   if (!registered) {
     return;
