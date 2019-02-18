@@ -36,7 +36,7 @@ export default function yandexMetrika (moduleOptions) {
   }
 
   const libQueryString = buildQueryString( libQuery );
-  const libURL = `//www.googletagmanager.com/gtag/js${libQueryString ? '?' + libQueryString : ''}`;
+  const libURL = `https://www.googletagmanager.com/gtag/js${libQueryString ? '?' + libQueryString : ''}`;
   const libFnName = 'gtag';
 
   // google analytics init script
@@ -53,7 +53,7 @@ export default function yandexMetrika (moduleOptions) {
 
   const scripts = [{
     src: libURL,
-    async: true
+    async: ''
   }, {
     innerHTML: injection.trim(),
     type: 'text/javascript',
