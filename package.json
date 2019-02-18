@@ -1,0 +1,28 @@
+{
+  "name": "@rabota/google-analytics",
+  "version": "0.1.1",
+  "description": "The most powerful module to work with Google Analytics in your Nuxt.js application",
+  "keywords": [
+    "vue", "vuejs", "nuxt",
+    "nuxt.js", "nuxtjs", "analytics",
+    "metrics", "metrika", "google",
+    "google analytics", "module",
+    "javascript",
+    "front-end",
+    "web"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Alexander Belov",
+    "url": "https://github.com/IPRIT"
+  },
+  "repository": "https://github.com/RabotaRu/google-analytics",
+  "homepage": "https://github.com/RabotaRu/google-analytics/tree/master",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "@rabota/analytics-layer": "^0.2.1"
+  }
+}
