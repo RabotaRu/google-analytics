@@ -55,9 +55,7 @@ export default function yandexMetrika (moduleOptions) {
     src: libURL,
     async: ''
   }, {
-    innerHTML: injection.trim(),
-    type: 'text/javascript',
-    charset: 'utf-8'
+    innerHTML: injection.trim()
   }];
 
   this.options.head.__dangerouslyDisableSanitizers = [ 'script', 'noscript' ];
