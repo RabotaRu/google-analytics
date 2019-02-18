@@ -1,6 +1,6 @@
 {
   "name": "@rabota/google-analytics",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "The most powerful module to work with Google Analytics in your Nuxt.js application",
   "keywords": [
     "vue", "vuejs", "nuxt",

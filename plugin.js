@@ -61,9 +61,7 @@ export default async (context, inject) => {
         return;
       }
 
-      // send new page url with the referer to each counter
       layer.init( layer.counters, { 'page_path': to.fullPath } );
-      layer.pushAll( 'event', 'page_view' );
     });
   }
 
