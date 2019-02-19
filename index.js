@@ -64,7 +64,7 @@ export default function yandexMetrika (moduleOptions) {
   // register plugin
   this.addPlugin({
     src: path.resolve(__dirname, 'plugin.js'),
-    ssr: false,
+    ssr: true,
     options: moduleOptions
   });
 };

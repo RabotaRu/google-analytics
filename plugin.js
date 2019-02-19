@@ -1,12 +1,6 @@
 import { GoogleLayer } from "@rabota/analytics-layer";
 
 export default async (context, inject) => {
-  const registered = !!window[ 'gtag' ];
-
-  if (!registered) {
-    return;
-  }
-
   const pluginOptions = <%= serialize(options) %>;
 
   const { app: { router } } = context;
@@ -18,6 +12,19 @@ export default async (context, inject) => {
     spa = true
   } = pluginOptions;
 
+  const layer = new GoogleLayer({
+    logging, options
+  });
+
+  // inject google analytics layer into context
+  inject( 'ga', layer );
+
+  const isAvailable = typeof window !== 'undefined' && !!window[ layer.layerName ];
+
+  if (!isAvailable) {
+    return;
+  }
+
   const isDynamicCounter = typeof counter === 'function';
   const isDynamicIncludedCounters = typeof includeCounters === 'function';
 
@@ -28,11 +35,9 @@ export default async (context, inject) => {
 
   includeCounters = await resolveCounters( includeCounters, context );
 
-  // create analytics layer (interface for different services)
-  const layer = new GoogleLayer({
-    counter, includeCounters,
-    logging, options
-  });
+  // set resolved counters
+  layer.setCounter( counter );
+  layer.setIncludedCounters( includeCounters );
 
   // assemble counters still not initialized
   const countersToInit = [];
@@ -64,9 +69,6 @@ export default async (context, inject) => {
       layer.init( layer.counters, { 'page_path': to.fullPath } );
     });
   }
-
-  // inject google analytics layer into context
-  inject( 'ga', layer );
 }
 
 /**
