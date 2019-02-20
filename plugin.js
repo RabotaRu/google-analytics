@@ -9,7 +9,8 @@ export default async (context, inject) => {
     includeCounters = [],
     options = {}, // google analytics options
     logging = false,
-    spa = true
+    spa = true,
+    hitParams
   } = pluginOptions;
 
   const layer = new GoogleLayer({
@@ -66,7 +67,22 @@ export default async (context, inject) => {
         return;
       }
 
-      layer.init( layer.counters, { 'page_path': to.fullPath } );
+      let toPath = to.fullPath;
+      let fromPath = from.fullPath;
+
+      const options = {};
+
+      const hasHitParamsFn = typeof hitParams === 'function';
+      const hitParams = hasHitParamsFn && hitParams( context );
+
+      if (hitParams) {
+        console.log( hitParams );
+        // todo: send visit params
+        // Object.assign(options, { params: hitParams });
+      }
+
+      // send new page url with the referer to each GA tracker
+      layer.hit( toPath, fromPath, options );
     });
   }
 }
