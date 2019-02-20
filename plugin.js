@@ -73,10 +73,10 @@ export default async (context, inject) => {
       const options = {};
 
       const hasHitParamsFn = typeof hitParams === 'function';
-      const hitParams = hasHitParamsFn && hitParams( context );
+      const params = hasHitParamsFn && hitParams( context );
 
-      if (hitParams) {
-        console.log( hitParams );
+      if (params) {
+        console.info( 'GA hit params', params );
         // todo: send visit params
         // Object.assign(options, { params: hitParams });
       }
