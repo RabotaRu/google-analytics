@@ -15,8 +15,8 @@ export function templateInitCounter (id, libFnName) {
  * @return {*}
  */
 export function templateInitCounters (counters, libFnName) {
-  return counters.reduce((result, id) => {
-    return result + templateInitCounter( id, libFnName );
+  return counters.reduce((result, counter) => {
+    return result + templateInitCounter( counter.id, libFnName );
   }, '');
 }
 
