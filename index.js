@@ -1,38 +1,22 @@
 import path from 'path';
 import { buildQueryString, templateInitCounters } from "./utils";
 
-export default function yandexMetrika (moduleOptions) {
+export default function googleAnalytics (moduleOptions) {
   // don't include on dev mode
   if (!moduleOptions.development && process.env.NODE_ENV !== 'production') {
     return;
   }
 
   const {
-    counter,
-    includeCounters,
+    staticCounters,
     options
   } = moduleOptions;
 
-  const isDynamicCounter = typeof counter === 'function';
-  const isDynamicIncludedCounters = typeof includeCounters === 'function';
-
-  const includeCounterBoot = counter && !isDynamicCounter;
-  const includeAdditionalCountersBoot = includeCounters && !isDynamicIncludedCounters;
-
-  const bootCounters = [];
-
-  if (includeCounterBoot) {
-    bootCounters.push( counter );
-  }
-
-  if (includeAdditionalCountersBoot) {
-    bootCounters.push( ...includeCounters );
-  }
-
+  const bootCounters = [].concat( staticCounters || [] );
   const libQuery = {};
 
-  if (includeCounterBoot) {
-    Object.assign(libQuery, { id: counter });
+  if (bootCounters.length) {
+    Object.assign(libQuery, { id: bootCounters[ 0 ].id });
   }
 
   const libQueryString = buildQueryString( libQuery );

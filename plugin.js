@@ -5,16 +5,16 @@ export default async (context, inject) => {
 
   const { app: { router } } = context;
   let {
-    counter,
-    includeCounters = [],
-    options = {}, // google analytics options
+    staticCounters = [],
+    dynamicCounters = [],
+    visitParams,
+    manualFirstHit = false,
+    firstHitVisitParams = false,
     logging = false,
-    spa = true,
-    hitParams
   } = pluginOptions;
 
   const layer = new GoogleLayer({
-    logging, options
+    logging, staticCounters
   });
 
   // inject google analytics layer into context
@@ -26,65 +26,48 @@ export default async (context, inject) => {
     return;
   }
 
-  const isDynamicCounter = typeof counter === 'function';
-  const isDynamicIncludedCounters = typeof includeCounters === 'function';
-
   // resolve all counters
-  counter = await resolveCounters( counter, context ).then(counters => {
-    return counters && counters.length && counters[ 0 ];
-  });
+  dynamicCounters = await resolveCounters( dynamicCounters, context );
 
-  includeCounters = await resolveCounters( includeCounters, context );
+  // set resolved dynamic counters
+  layer.setDynamicCounters( dynamicCounters );
 
-  // set resolved counters
-  layer.setCounter( counter );
-  layer.setIncludedCounters( includeCounters );
+  // init dynamic counters
+  layer.init( dynamicCounters );
 
-  // assemble counters still not initialized
-  const countersToInit = [];
+  // subscribe to router events
+  let firstHit = true;
+  router && router.afterEach((to, from) => {
+    let toPath = to.fullPath;
+    let fromPath = from.fullPath;
 
-  if (isDynamicCounter) {
-    countersToInit.push( counter );
-  }
+    const hasHitParamsFn = typeof visitParams === 'function';
+    const params = hasHitParamsFn && visitParams( context ) || visitParams;
 
-  if (isDynamicIncludedCounters) {
-    countersToInit.push( ...includeCounters );
-  }
+    if (firstHit) {
+      // set referer to null when the first hit
+      fromPath = null;
+      firstHit = false;
 
-  layer.init( countersToInit );
+      if (!manualFirstHit) {
+        if (firstHitVisitParams) {
+          // send visit params
+          layer.setParams( params );
+        }
 
-  if (spa && router) {
-
-    let ready = false;
-
-    router.onReady(() => {
-      ready = true
-    });
-
-    // subscribe to router events
-    router.afterEach((to, from) => {
-      if (!ready) {
         return;
       }
+    }
 
-      let toPath = to.fullPath;
-      let fromPath = from.fullPath;
+    const options = {};
 
-      const options = {};
+    if (params) {
+      Object.assign(options, { params });
+    }
 
-      const hasHitParamsFn = typeof hitParams === 'function';
-      const params = hasHitParamsFn && hitParams( context );
-
-      if (params) {
-        console.info( 'GA hit params', params );
-        // todo: send visit params
-        // Object.assign(options, { params: hitParams });
-      }
-
-      // send new page url with the referer to each GA tracker
-      layer.hit( toPath, fromPath, options );
-    });
-  }
+    // send new page url with the referer to each counter
+    layer.hit( toPath, fromPath, options );
+  });
 }
 
 /**
